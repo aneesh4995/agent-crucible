@@ -1,0 +1,25 @@
+# Secrets — never commit
+.env
+
+# Project planning (local only)
+CLAUDE.md
+Testbed-Build-Plan.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Runtime artifacts
+*.log
+volume/
+.localstack/
