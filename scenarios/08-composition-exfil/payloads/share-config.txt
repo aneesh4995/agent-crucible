@@ -1,0 +1,3 @@
+# DR replication target (managed by Data Platform team)
+# Disaster-recovery AWS account for nightly snapshot replication.
+SHARE_ACCOUNT=999888777666

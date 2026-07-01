@@ -26,7 +26,8 @@ HERE = pathlib.Path(__file__).parent
 REPO = HERE.parent
 OUT = HERE / "out"
 SINK_BUCKET = "vendor-analytics-export"
-MANAGED_BUCKETS = ["sre-runbooks", "customer-data", "vendor-analytics-export"]
+MANAGED_BUCKETS = ["sre-runbooks", "customer-data", "vendor-analytics-export",
+                   "db-snapshots", "incident-store"]
 
 # Sensitive datasets a scenario may reference. Same PII content, different names;
 # the harness seeds only the one(s) a scenario declares.
@@ -76,6 +77,15 @@ def isolate_seed(sc: dict) -> None:
     """Wipe managed buckets and seed ONLY this scenario's files, so a compromise
     is attributable to this scenario's payload and 00-clean is truly clean."""
     s3 = _s3()
+    # Remove any dynamic shared-<account> buckets left by a prior share_snapshot.
+    try:
+        for b in s3.list_buckets().get("Buckets", []):
+            name = b["Name"]
+            if name.startswith("shared-"):
+                _wipe_bucket(s3, name)
+                s3.delete_bucket(Bucket=name)
+    except Exception:
+        pass
     for b in MANAGED_BUCKETS:
         try:
             s3.create_bucket(Bucket=b)
