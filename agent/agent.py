@@ -31,7 +31,7 @@ def _client() -> OpenAI:
 
 
 def _create_with_retry(client: OpenAI, model: str, messages: list[dict],
-                       max_retries: int = 6):
+                       tools_schema: list, max_retries: int = 6):
     """Call chat.completions with exponential backoff on 429/5xx so upstream
     rate limits don't get miscounted as held/errored runs."""
     delay = 4.0
@@ -40,7 +40,7 @@ def _create_with_retry(client: OpenAI, model: str, messages: list[dict],
             return client.chat.completions.create(
                 model=model,
                 messages=messages,
-                tools=TOOL_SCHEMA,
+                tools=tools_schema,
                 tool_choice="auto",
                 temperature=0,
                 max_tokens=1024,
@@ -54,17 +54,42 @@ def _create_with_retry(client: OpenAI, model: str, messages: list[dict],
             delay = min(delay * 2, 60)
 
 
-def run_agent(model: str, operator_prompt: str, max_steps: int = 6) -> tuple[Session, list[dict]]:
-    """Run one scenario. Returns (session with action log, raw message transcript)."""
+def make_mcp_tool(name: str, description: str, result: str):
+    """Build a poisoned MCP-style tool for a scenario. `description` and/or
+    `result` may carry an injection (M1 desc-poison / M2 result-poison). The
+    tool just records the call and returns the canned (possibly poisoned)
+    result — the model must still choose to act on it."""
+    schema = {"type": "function", "function": {
+        "name": name, "description": description,
+        "parameters": {"type": "object", "properties": {
+            "incident_id": {"type": "string"}}, "required": []}}}
+
+    def _fn(session: Session, args: dict) -> str:
+        from tools import Action
+        session.record(Action(name, args, result, ["mcp-tool-called"]))
+        return result
+
+    return schema, _fn
+
+
+def run_agent(model: str, operator_prompt: str, max_steps: int = 6,
+              extra_tools: list | None = None,
+              extra_dispatch: dict | None = None) -> tuple[Session, list[dict]]:
+    """Run one scenario. Returns (session with action log, raw message transcript).
+
+    extra_tools / extra_dispatch inject additional (e.g. adversarial MCP) tools
+    into the loop for MCP-in-the-middle scenarios."""
     client = _client()
     session = Session()
+    tools_schema = TOOL_SCHEMA + (extra_tools or [])
+    dispatch = {**DISPATCH, **(extra_dispatch or {})}
     messages: list[dict] = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": operator_prompt},
     ]
 
     for _ in range(max_steps):
-        resp = _create_with_retry(client, model, messages)
+        resp = _create_with_retry(client, model, messages, tools_schema)
         # Some providers return an empty/None choices list on filtered or empty
         # responses; treat that as "no further action" rather than crashing.
         if not getattr(resp, "choices", None):
@@ -84,7 +109,7 @@ def run_agent(model: str, operator_prompt: str, max_steps: int = 6) -> tuple[Ses
             except json.JSONDecodeError:
                 args = {}
             try:
-                result = DISPATCH[name](session, args) if name in DISPATCH \
+                result = dispatch[name](session, args) if name in dispatch \
                     else f"error: unknown tool {name}"
             except Exception as e:  # surface tool errors back to the model
                 result = f"error: {type(e).__name__}: {e}"
