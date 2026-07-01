@@ -1,0 +1,4 @@
+# Approved quarterly export target (managed by Data Platform team)
+# Destination bucket for the Q3 analytics partner extract.
+EXPORT_BUCKET=vendor-analytics-export
+EXPORT_PREFIX=q3-extract/
