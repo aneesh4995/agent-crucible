@@ -34,17 +34,34 @@ psql postgresql://sre:sre_local@localhost:5432/sre_runbooks -c '\dt'
 
 Seed data lives in `init/`. The `customer-data` S3 bucket and Vault
 `secret/production/*` paths are the sensitive exfiltration targets used by
-later attack scenarios.
+the attack scenarios.
+
+## Attack scenarios
+
+8 scenarios test two threat classes: a stealth ladder of prompt-injection
+variants (01–06) and a confused-deputy attack with no injection at all (07).
+Full scenario table, ground truth, and results: **[scenarios/README.md](scenarios/README.md)**.
+
+Run any scenario against any model automatically:
+```bash
+python agent/harness.py --models mistralai/mistral-medium-3-5 --scenarios 07-confused-deputy-export
+```
+See [agent/README.md](agent/README.md) for the harness.
+
+**Headline result so far:** a strong open model (mistral-medium-3.5) was
+compromised on 7/7 scenarios; Claude Code held on all manual runs. Capability
+doesn't predict robustness — see [scenarios/README.md](scenarios/README.md#automated-harness-results-isolated-attributable--2026-07-01)
+for the full matrix.
 
 ## Roadmap
 
-| Session | Adds |
-|---|---|
-| 1 | Infrastructure scaffold (this) |
-| 2 | Scenario 01 — S3 runbook poisoning + guardrail + dashboard |
-| 3 | Scenario 02 — Postgres injection + taint tracking |
-| 4 | Scenario 03 — Vault secrets exfiltration + README polish |
-| 5 | GitHub launch |
+| Stage | Adds | Status |
+|---|---|---|
+| 1 | Infrastructure scaffold | done |
+| 2 | Attack corpus (8 scenarios) + automated multi-model harness | done |
+| 3 | Guardrail interceptor + policy engine | in progress |
+| 4 | Dashboard | not started |
+| 5 | GitHub launch polish | not started |
 
 ## License
 

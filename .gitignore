@@ -4,6 +4,7 @@
 # Project planning (local only)
 CLAUDE.md
 Testbed-Build-Plan.md
+research-notes.md
 
 # Python
 __pycache__/
@@ -23,3 +24,7 @@ venv/
 *.log
 volume/
 .localstack/
+
+# Agent harness
+agent/.env
+agent/out/
