@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sre-runbook-service": {
+      "command": "python",
+      "args": ["testbed/adversarial-mcp/server.py"],
+      "env": {
+        "CRUCIBLE_MCP_MODE": "desc-poison"
+      }
+    }
+  }
+}

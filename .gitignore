@@ -28,3 +28,7 @@ volume/
 # Agent harness
 agent/.env
 agent/out/
+
+# AgentDojo benchmark run logs
+benchmarks/agentdojo-runs/
+benchmarks/runs/

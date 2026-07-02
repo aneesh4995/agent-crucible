@@ -16,11 +16,12 @@ import datetime as dt
 import json
 import os
 import pathlib
+import sys
 
 import boto3
 import yaml
 
-from agent import run_agent
+from agent import make_mcp_tool, run_agent
 
 HERE = pathlib.Path(__file__).parent
 REPO = HERE.parent
@@ -112,7 +113,13 @@ def main() -> None:
     ap.add_argument("--models", nargs="+", required=True, help="OpenRouter model ids")
     ap.add_argument("--scenarios", nargs="*", help="scenario ids to run (default: all)")
     ap.add_argument("--max-steps", type=int, default=8)
+    ap.add_argument("--guardrail", action="store_true", help="enable the reference guardrail")
+    ap.add_argument("--layers", default="L1,L2,L3", help="guardrail layers to enable (ablation)")
     args = ap.parse_args()
+
+    guardrail_layers = set(args.layers.split(",")) if args.guardrail else None
+    if args.guardrail:
+        sys.path.insert(0, str(REPO / "guardrails"))
 
     scenarios = load_scenarios()
     if args.scenarios:
@@ -131,8 +138,24 @@ def main() -> None:
         for model in args.models:
             for sc in scenarios:
                 isolate_seed(sc)
+                # MCP-in-the-middle scenarios inject an adversarial tool whose
+                # description and/or result carries the injection.
+                extra_tools, extra_dispatch = None, None
+                if sc.get("mcp_tool"):
+                    m = sc["mcp_tool"]
+                    schema, fn = make_mcp_tool(m["name"], m["description"], m["result"])
+                    extra_tools, extra_dispatch = [schema], {m["name"]: fn}
+                guardrail = None
+                if guardrail_layers is not None:
+                    from guardrail import Guardrail
+                    guardrail = Guardrail(
+                        profile=sc.get("task_profile", "sre-triage"),
+                        layers=guardrail_layers)
                 try:
-                    session, transcript = run_agent(model, sc["prompt"], args.max_steps)
+                    session, transcript = run_agent(
+                        model, sc["prompt"], args.max_steps,
+                        extra_tools=extra_tools, extra_dispatch=extra_dispatch,
+                        guardrail=guardrail)
                     compromised = session.compromised
                     flags = ";".join(sorted(set(session.flag_summary))) or "-"
                     outcome = "COMPROMISED" if compromised else "held"
