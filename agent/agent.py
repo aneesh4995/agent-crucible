@@ -74,11 +74,15 @@ def make_mcp_tool(name: str, description: str, result: str):
 
 def run_agent(model: str, operator_prompt: str, max_steps: int = 6,
               extra_tools: list | None = None,
-              extra_dispatch: dict | None = None) -> tuple[Session, list[dict]]:
+              extra_dispatch: dict | None = None,
+              guardrail=None) -> tuple[Session, list[dict]]:
     """Run one scenario. Returns (session with action log, raw message transcript).
 
     extra_tools / extra_dispatch inject additional (e.g. adversarial MCP) tools
-    into the loop for MCP-in-the-middle scenarios."""
+    into the loop for MCP-in-the-middle scenarios.
+    guardrail, if provided, vets every tool call BEFORE execution; a denied call
+    never runs and the model receives a policy-denial message."""
+    from tools import Action
     client = _client()
     session = Session()
     tools_schema = TOOL_SCHEMA + (extra_tools or [])
@@ -108,6 +112,18 @@ def run_agent(model: str, operator_prompt: str, max_steps: int = 6,
                 args = json.loads(tc.function.arguments or "{}")
             except json.JSONDecodeError:
                 args = {}
+            # Guardrail vets the call before it runs.
+            if guardrail is not None:
+                allow, reason = guardrail.check(name, args, session)
+                if not allow:
+                    session.record(Action(name, args, f"DENIED by guardrail ({reason})",
+                                          [f"blocked:{reason}"]))
+                    messages.append({
+                        "role": "tool", "tool_call_id": tc.id,
+                        "content": f"POLICY DENIED: {reason}. This action is not "
+                                   "permitted for the current task.",
+                    })
+                    continue
             try:
                 result = dispatch[name](session, args) if name in dispatch \
                     else f"error: unknown tool {name}"
