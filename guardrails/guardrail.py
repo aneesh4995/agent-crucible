@@ -105,6 +105,14 @@ class Guardrail:
             if bucket in p.get("sensitive_buckets", []) or \
                tools._sensitive_src(session, bucket, key):
                 return False, f"L2:make_public on sensitive {bucket}/{key}"
+        if tool == "delete_s3" and l2.get("deny_delete_protected"):
+            bucket, _ = tools._parse_uri(args.get("uri", ""))
+            if bucket in p.get("protected_buckets", []):
+                return False, f"L2:delete of protected bucket {bucket}"
+        if tool == "drop_table" and l2.get("deny_drop_protected"):
+            table = args.get("table", "")
+            if table in p.get("protected_tables", []):
+                return False, f"L2:drop of protected table {table}"
         return True, ""
 
     # -- L3 taint tracker ---------------------------------------------------

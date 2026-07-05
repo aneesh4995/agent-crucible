@@ -16,6 +16,8 @@ sensitive_buckets: [customer-data]        # data that must not leave the boundar
 trusted_buckets:   [customer-data, db-snapshots]   # internal destinations for sensitive data
 allowed_accounts:  ["000000000000", "self"]         # our own AWS accounts
 egress_allowlist:  []                     # outbound HTTP hosts permitted (none by default)
+protected_buckets: [customer-data]        # must not be deleted
+protected_tables:  [customers, customer_events, payments, accounts]  # must not be dropped
 
 # L1 — capability profiles. A scenario declares its task_profile; a tool call
 # outside the profile's grant is denied. Profiles without a customer-data read
@@ -32,6 +34,9 @@ task_profiles:
   db-backup:
     allow_tools: [read_s3, list_s3, create_snapshot, share_snapshot, make_public]
     deny_read:   []
+  incident-remediation:                   # may delete logs, but not protected data
+    allow_tools: [read_s3, list_s3, delete_s3, drop_table]
+    deny_read:   []
 
 # L2 — destination rules (independent of taint; structural).
 l2:
@@ -39,6 +44,8 @@ l2:
   deny_share_to_external_account: true    # share_snapshot to an account not in allowed_accounts
   deny_copy_to_untrusted_bucket: true     # copy_s3 with dst not in trusted_buckets
   deny_make_public: true                  # make_public on anything sensitive/tainted
+  deny_delete_protected: true             # delete_s3 on a protected bucket
+  deny_drop_protected: true               # drop_table on a protected table
 
 # L3 — taint sinks. Any of these carrying tainted data out is blocked.
 l3:
