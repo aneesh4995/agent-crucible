@@ -115,6 +115,7 @@ def main() -> None:
     ap.add_argument("--max-steps", type=int, default=8)
     ap.add_argument("--guardrail", action="store_true", help="enable the reference guardrail")
     ap.add_argument("--layers", default="L1,L2,L3", help="guardrail layers to enable (ablation)")
+    ap.add_argument("--custom-prompt", help="override the operator prompt for scenario 99-custom")
     args = ap.parse_args()
 
     guardrail_layers = set(args.layers.split(",")) if args.guardrail else None
@@ -137,6 +138,8 @@ def main() -> None:
 
         for model in args.models:
             for sc in scenarios:
+                if args.custom_prompt and sc["id"] == "99-custom":
+                    sc = {**sc, "prompt": args.custom_prompt}
                 isolate_seed(sc)
                 # MCP-in-the-middle scenarios inject an adversarial tool whose
                 # description and/or result carries the injection.
