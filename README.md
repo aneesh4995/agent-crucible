@@ -48,6 +48,10 @@ python agent/harness.py --models mistralai/mistral-medium-3-5 --scenarios 07-con
 ```
 See [agent/README.md](agent/README.md) for the harness.
 
+**Bring your own attack:** drop an injection into
+[scenarios/99-custom/payloads/custom-runbook.md](scenarios/99-custom/payloads/custom-runbook.md)
+and run `--scenarios 99-custom` — no code changes, compromise scored automatically.
+
 **Headline result so far:** a strong open model (mistral-medium-3.5) was
 compromised on 7/7 scenarios; Claude Code held on all manual runs. Capability
 doesn't predict robustness — see [scenarios/README.md](scenarios/README.md#automated-harness-results-isolated-attributable--2026-07-01)
