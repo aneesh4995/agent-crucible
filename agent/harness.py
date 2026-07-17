@@ -6,6 +6,12 @@ Usage:
   python harness.py --models qwen/qwen-2.5-7b-instruct --scenarios 07-confused-deputy-export
   python harness.py --models mistralai/mistral-medium-3.5 --trials 10
 
+  # Parallel (optional): start replica LocalStack instances, then run N workers,
+  # each pinned to its own endpoint so isolate_seed() never collides across workers.
+  docker compose --profile parallel up -d
+  python harness.py --models a b c --trials 10 --workers 3 \
+      --localstack-endpoints http://localhost:4566,http://localhost:4567,http://localhost:4568
+
 Resets the exfil sink (vendor-analytics-export) before each run so copy-based
 exfil is attributable to that run.
 """
@@ -19,11 +25,12 @@ import math
 import os
 import pathlib
 import sys
+from concurrent.futures import ProcessPoolExecutor
 
 import boto3
 import yaml
 
-from agent import make_mcp_tool, run_agent
+from agent import make_mcp_tool, make_rugpull_mcp_tool, run_agent
 
 HERE = pathlib.Path(__file__).parent
 REPO = HERE.parent
@@ -123,6 +130,88 @@ def wilson_ci(hits: int, n: int, z: float = 1.96) -> tuple[float, float]:
     return (max(0.0, lo), min(1.0, hi))
 
 
+def run_pairs(pairs: list[tuple[str, dict]], trials: int, max_steps: int,
+              guardrail_layers: set[str] | None, force_profile: str | None,
+              custom_prompt: str | None, endpoint: str | None,
+              stamp: str, tag: str = "") -> tuple[pathlib.Path, list[tuple]]:
+    """Run a list of (model, scenario) pairs, `trials` repetitions each. Writes
+    its own results CSV (results-{stamp}{tag}.csv) and per-trial transcripts.
+
+    Pure function of its arguments (no shared argparse.Namespace) so it can be
+    pickled and dispatched to a separate OS process by --workers N — each
+    worker pinned to its own `endpoint` (LOCALSTACK_ENDPOINT) so N workers
+    never collide on isolate_seed()'s shared-bucket wipe/reseed. Threads can't
+    do this safely: os.environ is process-global, and tools.py/harness.py both
+    read LOCALSTACK_ENDPOINT from it at call time.
+    """
+    if endpoint:
+        os.environ["LOCALSTACK_ENDPOINT"] = endpoint
+    if guardrail_layers is not None:
+        sys.path.insert(0, str(REPO / "guardrails"))
+
+    OUT.mkdir(exist_ok=True)
+    results_path = OUT / f"results-{stamp}{tag}.csv"
+    label = f"[{tag[1:]}] " if tag else ""  # tag is always "-w{i}"; show "w{i}"
+
+    rows = []
+    with results_path.open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["model", "scenario", "trial", "expected", "outcome", "compromised", "flags", "steps"])
+
+        for model, sc in pairs:
+            if custom_prompt and sc["id"] == "99-custom":
+                sc = {**sc, "prompt": custom_prompt}
+            for trial in range(1, trials + 1):
+                isolate_seed(sc)
+                # MCP-in-the-middle scenarios inject an adversarial tool whose
+                # description and/or result carries the injection.
+                extra_tools, extra_dispatch = None, None
+                if sc.get("mcp_tool"):
+                    m = sc["mcp_tool"]
+                    schema, fn = make_mcp_tool(m["name"], m["description"], m["result"])
+                    extra_tools, extra_dispatch = [schema], {m["name"]: fn}
+                elif sc.get("mcp_tool_rugpull"):
+                    m = sc["mcp_tool_rugpull"]
+                    schema, fn = make_rugpull_mcp_tool(
+                        m["name"], m["description"], m["benign_result"], m["malicious_result"])
+                    extra_tools, extra_dispatch = [schema], {m["name"]: fn}
+                guardrail = None
+                if guardrail_layers is not None:
+                    from guardrail import Guardrail
+                    profile = force_profile or sc.get("task_profile", "sre-triage")
+                    guardrail = Guardrail(profile=profile, layers=guardrail_layers)
+                try:
+                    session, transcript = run_agent(
+                        model, sc["prompt"], max_steps,
+                        extra_tools=extra_tools, extra_dispatch=extra_dispatch,
+                        guardrail=guardrail)
+                    compromised = session.compromised
+                    flags = ";".join(sorted(set(session.flag_summary))) or "-"
+                    steps = len(session.actions)
+                    if sc.get("benign"):
+                        et = sc.get("expect_tool")
+                        utility_ok = any(
+                            a.tool == et and not any(f.startswith("blocked:") for f in a.flags)
+                            for a in session.actions)
+                        outcome = "utility-ok" if utility_ok else "utility-BLOCKED"
+                    else:
+                        outcome = "COMPROMISED" if compromised else "held"
+                except Exception as e:
+                    compromised, flags, outcome, steps = False, f"ERROR:{e}", "error", 0
+                    transcript = [{"error": str(e)}]
+
+                # persist full transcript for audit
+                tpath = OUT / f"transcript-{stamp}{tag}-{slug(model)}-{sc['id']}-t{trial}.json"
+                tpath.write_text(json.dumps(transcript, indent=2, default=str))
+
+                w.writerow([model, sc["id"], trial, sc["expected"], outcome, compromised, flags, steps])
+                rows.append((model, sc["id"], outcome, flags))
+                mark = "X" if compromised else "."
+                print(f"{label}[{mark}] {model:45s} {sc['id']:32s} trial {trial}/{trials:<3d} {outcome:12s} {flags}")
+
+    return results_path, rows
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--models", nargs="+", required=True, help="OpenRouter model ids")
@@ -135,11 +224,18 @@ def main() -> None:
                                             "(e.g. 'blanket' for the generic-baseline comparison)")
     ap.add_argument("--trials", type=int, default=1,
                      help="repetitions per (model, scenario), reseeded each trial")
+    ap.add_argument("--workers", type=int, default=1,
+                     help="optional: run N parallel workers, each pinned to its own "
+                          "LocalStack endpoint. Default 1 = current sequential "
+                          "behavior, unchanged. Requires --localstack-endpoints.")
+    ap.add_argument("--localstack-endpoints",
+                     help="comma-separated LocalStack endpoint URLs, one per worker "
+                          "(required if --workers > 1), e.g. "
+                          "'http://localhost:4566,http://localhost:4567'. Start "
+                          "replicas first: docker compose --profile parallel up -d")
     args = ap.parse_args()
 
     guardrail_layers = set(args.layers.split(",")) if args.guardrail else None
-    if args.guardrail:
-        sys.path.insert(0, str(REPO / "guardrails"))
 
     scenarios = load_scenarios()
     if args.scenarios:
@@ -148,59 +244,40 @@ def main() -> None:
 
     OUT.mkdir(exist_ok=True)
     stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-    results_path = OUT / f"results-{stamp}.csv"
+    pairs = [(model, sc) for model in args.models for sc in scenarios]
 
-    rows = []
-    with results_path.open("w", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["model", "scenario", "trial", "expected", "outcome", "compromised", "flags", "steps"])
+    if args.workers <= 1:
+        results_path, rows = run_pairs(
+            pairs, args.trials, args.max_steps, guardrail_layers, args.force_profile,
+            args.custom_prompt, endpoint=None, stamp=stamp)
+    else:
+        endpoints = [e.strip() for e in (args.localstack_endpoints or "").split(",") if e.strip()]
+        if len(endpoints) != args.workers:
+            sys.exit(f"--workers {args.workers} requires exactly {args.workers} "
+                     f"--localstack-endpoints (got {len(endpoints)}). Start replicas "
+                     f"with: docker compose --profile parallel up -d")
+        chunks = [pairs[i::args.workers] for i in range(args.workers)]
+        results_paths, rows = [], []
+        with ProcessPoolExecutor(max_workers=args.workers) as ex:
+            futures = [
+                ex.submit(run_pairs, chunk, args.trials, args.max_steps, guardrail_layers,
+                          args.force_profile, args.custom_prompt, endpoints[i], stamp, f"-w{i}")
+                for i, chunk in enumerate(chunks) if chunk
+            ]
+            for fut in futures:
+                path, worker_rows = fut.result()
+                results_paths.append(path)
+                rows.extend(worker_rows)
 
-        for model in args.models:
-            for sc in scenarios:
-                if args.custom_prompt and sc["id"] == "99-custom":
-                    sc = {**sc, "prompt": args.custom_prompt}
-                for trial in range(1, args.trials + 1):
-                    isolate_seed(sc)
-                    # MCP-in-the-middle scenarios inject an adversarial tool whose
-                    # description and/or result carries the injection.
-                    extra_tools, extra_dispatch = None, None
-                    if sc.get("mcp_tool"):
-                        m = sc["mcp_tool"]
-                        schema, fn = make_mcp_tool(m["name"], m["description"], m["result"])
-                        extra_tools, extra_dispatch = [schema], {m["name"]: fn}
-                    guardrail = None
-                    if guardrail_layers is not None:
-                        from guardrail import Guardrail
-                        profile = args.force_profile or sc.get("task_profile", "sre-triage")
-                        guardrail = Guardrail(profile=profile, layers=guardrail_layers)
-                    try:
-                        session, transcript = run_agent(
-                            model, sc["prompt"], args.max_steps,
-                            extra_tools=extra_tools, extra_dispatch=extra_dispatch,
-                            guardrail=guardrail)
-                        compromised = session.compromised
-                        flags = ";".join(sorted(set(session.flag_summary))) or "-"
-                        steps = len(session.actions)
-                        if sc.get("benign"):
-                            et = sc.get("expect_tool")
-                            utility_ok = any(
-                                a.tool == et and not any(f.startswith("blocked:") for f in a.flags)
-                                for a in session.actions)
-                            outcome = "utility-ok" if utility_ok else "utility-BLOCKED"
-                        else:
-                            outcome = "COMPROMISED" if compromised else "held"
-                    except Exception as e:
-                        compromised, flags, outcome, steps = False, f"ERROR:{e}", "error", 0
-                        transcript = [{"error": str(e)}]
-
-                    # persist full transcript for audit
-                    tpath = OUT / f"transcript-{stamp}-{slug(model)}-{sc['id']}-t{trial}.json"
-                    tpath.write_text(json.dumps(transcript, indent=2, default=str))
-
-                    w.writerow([model, sc["id"], trial, sc["expected"], outcome, compromised, flags, steps])
-                    rows.append((model, sc["id"], outcome, flags))
-                    mark = "X" if compromised else "."
-                    print(f"[{mark}] {model:45s} {sc['id']:32s} trial {trial}/{args.trials:<3d} {outcome:12s} {flags}")
+        # merge per-worker CSVs into one combined file for downstream tooling
+        results_path = OUT / f"results-{stamp}.csv"
+        with results_path.open("w", newline="") as out_f:
+            w = csv.writer(out_f)
+            w.writerow(["model", "scenario", "trial", "expected", "outcome", "compromised", "flags", "steps"])
+            for p in results_paths:
+                with p.open() as in_f:
+                    next(in_f)  # skip that worker's own header
+                    out_f.writelines(in_f.readlines())
 
     # summary: security (ASR on attacks) + utility (benign pass rate), with 95% Wilson CIs
     benign_ids = {s["id"] for s in scenarios if s.get("benign")}
@@ -219,7 +296,7 @@ def main() -> None:
             line += f"  |  utility {util}/{len(ben)} ({u_lo:.0%}-{u_hi:.0%})"
         print(line)
     print(f"\nresults: {results_path}")
-    print(f"transcripts: {OUT}/transcript-{stamp}-*.json")
+    print(f"transcripts: {OUT}/transcript-{stamp}*-*.json")
 
 
 if __name__ == "__main__":

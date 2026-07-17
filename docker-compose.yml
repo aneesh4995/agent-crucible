@@ -18,6 +18,50 @@ services:
       retries: 10
       start_period: 20s
 
+  # Optional LocalStack replicas for `harness.py --workers N` (parallel eval
+  # runs). Each replica is a fully independent S3 namespace, so N harness
+  # workers can run concurrently without one worker's isolate_seed() wiping
+  # buckets another worker is mid-read on. Off by default — start with
+  # `docker compose --profile parallel up` to bring these up alongside the
+  # primary localstack service.
+  localstack-2:
+    image: localstack/localstack:latest
+    profiles: ["parallel"]
+    ports:
+      - "4567:4566"
+    environment:
+      - SERVICES=s3,dynamodb,iam,sts,secretsmanager,cloudwatch,logs
+      - DEFAULT_REGION=us-east-1
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
+    volumes:
+      - "./init/seed-localstack.sh:/etc/localstack/init/ready.d/seed.sh"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  localstack-3:
+    image: localstack/localstack:latest
+    profiles: ["parallel"]
+    ports:
+      - "4568:4566"
+    environment:
+      - SERVICES=s3,dynamodb,iam,sts,secretsmanager,cloudwatch,logs
+      - DEFAULT_REGION=us-east-1
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
+    volumes:
+      - "./init/seed-localstack.sh:/etc/localstack/init/ready.d/seed.sh"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
   postgres:
     image: postgres:15
     environment:
