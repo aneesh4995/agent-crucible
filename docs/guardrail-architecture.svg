@@ -1,0 +1,64 @@
+<svg width="680" height="520" viewBox="0 0 680 520" xmlns="http://www.w3.org/2000/svg" role="img" font-family="sans-serif">
+<title>Guardrail architecture: L1 capability broker, L2 policy engine, L3 taint tracker</title>
+<desc>A tool call from the agent passes sequentially through three guardrail layers before execution. Any layer can deny the call, returning a synthetic policy-denial result to the agent. An allowed call dispatches to real infrastructure. Policy.yaml configures L1/L2; session taint state feeds L3.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#3d3d3a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<text x="340" y="44" text-anchor="middle" font-size="12" fill="#5f5e5a">tool call (name, args)</text>
+<line x1="340" y1="52" x2="340" y2="78" stroke="#5f5e5a" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<g>
+<rect x="140" y="80" width="400" height="288" rx="20" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.5"/>
+<text x="340" y="104" text-anchor="middle" font-size="14" font-weight="500" fill="#2C2C2A">Guardrail — pre-execution gate</text>
+<text x="340" y="122" text-anchor="middle" font-size="12" fill="#5f5e5a">sequential checks, ablation-toggleable</text>
+</g>
+
+<g>
+<rect x="160" y="140" width="360" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="340" y="158" text-anchor="middle" font-size="14" font-weight="500" fill="#0C447C">L1 — capability broker</text>
+<text x="340" y="176" text-anchor="middle" font-size="12" fill="#185FA5">allow_tools + deny_read (task profile)</text>
+</g>
+
+<g>
+<rect x="160" y="216" width="360" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="340" y="234" text-anchor="middle" font-size="14" font-weight="500" fill="#0C447C">L2 — policy engine</text>
+<text x="340" y="252" text-anchor="middle" font-size="12" fill="#185FA5">destination + egress rules</text>
+</g>
+
+<g>
+<rect x="160" y="292" width="360" height="56" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text x="340" y="310" text-anchor="middle" font-size="14" font-weight="500" fill="#0C447C">L3 — taint tracker</text>
+<text x="340" y="328" text-anchor="middle" font-size="12" fill="#185FA5">blocks sinks carrying tainted data</text>
+</g>
+
+<text x="45" y="208" text-anchor="start" font-size="12" fill="#5f5e5a">policy.yaml</text>
+<line x1="122" y1="204" x2="140" y2="204" stroke="#888780" stroke-width="0.5" stroke-dasharray="3,3"/>
+<circle cx="140" cy="204" r="2" fill="#5f5e5a"/>
+
+<text x="45" y="324" text-anchor="start" font-size="12" fill="#5f5e5a">taint state</text>
+<line x1="122" y1="320" x2="160" y2="320" stroke="#888780" stroke-width="0.5" stroke-dasharray="3,3"/>
+<circle cx="160" cy="320" r="2" fill="#5f5e5a"/>
+
+<line x1="520" y1="168" x2="545" y2="168" stroke="#E24B4A" stroke-width="0.5"/>
+<line x1="520" y1="244" x2="545" y2="244" stroke="#E24B4A" stroke-width="0.5"/>
+<line x1="520" y1="320" x2="545" y2="320" stroke="#E24B4A" stroke-width="0.5"/>
+<line x1="545" y1="168" x2="545" y2="410" stroke="#E24B4A" stroke-width="0.5"/>
+<path d="M545,410 L535,410 L535,420" fill="none" stroke="#E24B4A" stroke-width="0.5" marker-end="url(#arrow)"/>
+<text x="552" y="164" text-anchor="start" font-size="12" fill="#5f5e5a">deny</text>
+
+<path d="M340,368 L340,400 L270,400 L270,420" fill="none" stroke="#5f5e5a" stroke-width="1.5" marker-end="url(#arrow)"/>
+<text x="300" y="390" text-anchor="middle" font-size="12" fill="#5f5e5a">allow</text>
+
+<g>
+<rect x="160" y="420" width="220" height="56" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
+<text x="270" y="438" text-anchor="middle" font-size="14" font-weight="500" fill="#27500A">tool dispatch</text>
+<text x="270" y="456" text-anchor="middle" font-size="12" fill="#3B6D11">S3 / Postgres / Vault</text>
+</g>
+
+<g>
+<rect x="450" y="420" width="170" height="56" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+<text x="535" y="438" text-anchor="middle" font-size="14" font-weight="500" fill="#791F1F">policy denial</text>
+<text x="535" y="456" text-anchor="middle" font-size="12" fill="#A32D2D">returned to agent</text>
+</g>
+</svg>
