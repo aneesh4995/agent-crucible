@@ -7,6 +7,12 @@ AI agents with cloud access are vulnerable to prompt injection. This testbed
 lets you fire those attacks safely against an agent and measure what your
 guardrails catch.
 
+## Guardrail architecture
+
+![Guardrail architecture: L1 capability broker, L2 policy engine, L3 taint tracker](docs/guardrail-architecture.svg)
+
+Every proposed tool call runs through three layers, in order, before it's allowed to execute — any layer can deny the call, and a denied call never reaches real infrastructure. `policy.yaml` configures L1's per-task allowlists and L2's destination rules; L3 reads the session's live taint state to catch a sink moving sensitive-derived data out. See [guardrails/guardrail.py](guardrails/guardrail.py).
+
 ## Quick start
 
 ```bash
