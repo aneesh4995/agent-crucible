@@ -24,7 +24,7 @@ def test_shipped_config_lists_the_seven_pilot_scenarios_with_one_attack_per_chan
     c = cfg()
     ids = [e["id"] for e in c["scenarios"]]
     assert ids == ["00-clean", "B1-log-cleanup", "B2-internal-export",
-                   "01-blatant-override", "10-trusted-channel",
+                   "01-blatant-override", "15-db-record-injection",
                    "07-confused-deputy-export", "M2-mcp-result-poison"]
     by_id = {s["id"]: s for s in scenarios()}
     assert all(i in by_id for i in ids)
@@ -37,7 +37,8 @@ def test_shipped_config_lists_the_seven_pilot_scenarios_with_one_attack_per_chan
     # the channels really are what the config says
     assert by_id["M2-mcp-result-poison"].get("mcp_tool")
     assert "config/export-target.txt" in str(by_id["07-confused-deputy-export"]["runbooks"])
-    assert "incident-store" in str(by_id["10-trusted-channel"]["runbooks"])
+    assert by_id["15-db-record-injection"].get("db_tool")
+    assert by_id["15-db-record-injection"].get("postgres_rows")
 
 
 def test_shipped_config_settings():

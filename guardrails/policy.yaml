@@ -32,7 +32,10 @@ protected_tables:  [customers, customer_events, payments, accounts]  # must not 
 # internal export, stale-table drop). The benign task suite quantifies that.
 task_profiles:
   blanket:                                # read-only: bans every mutation/egress
-    allow_tools: [read_s3, list_s3, get_incident, get_runbook]
+    allow_tools: [read_s3, list_s3, get_incident, get_runbook, query_db]
+    deny_read:   ["customer-data/*"]
+  db-triage:                              # triage from a database-stored runbook
+    allow_tools: [read_s3, list_s3, query_db]
     deny_read:   ["customer-data/*"]
   sre-triage:                             # incident triage: no reason to touch PII
     allow_tools: [read_s3, list_s3, get_incident, get_runbook]

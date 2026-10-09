@@ -47,7 +47,7 @@ import yaml
 
 import fingerprint
 from agent import SYSTEM_PROMPT, make_mcp_tool, make_rugpull_mcp_tool, run_agent
-from tools import TOOL_SCHEMA
+from tools import DB_TOOL_DISPATCH, DB_TOOL_SCHEMA, TOOL_SCHEMA
 
 HERE = pathlib.Path(__file__).parent
 REPO = HERE.parent
@@ -206,6 +206,39 @@ def isolate_vault(sc: dict) -> None:
         # fingerprint records the vault component as unavailable (loudly).
 
 
+# runbooks rows with id >= this are scenario data owned by the harness: they are
+# deleted before every scenario and only the rows a scenario declares are inserted.
+# The seed-postgres.sql rows all have small serial ids, so they are never touched.
+POSTGRES_MANAGED_MIN_ID = 9000
+
+
+def isolate_postgres(sc: dict) -> None:
+    """Reset harness-managed Postgres rows and insert only this scenario's.
+
+    Mirrors isolate_vault: the reset runs for EVERY scenario so database state
+    never depends on run history, and an unreachable Postgres is tolerated only
+    when the scenario declares no rows (the fingerprint then records the
+    postgres component as unavailable, loudly).
+    """
+    specs = sc.get("postgres_rows", [])
+    try:
+        import psycopg
+        with psycopg.connect(**fingerprint._pg_params()) as conn, conn.cursor() as cur:
+            cur.execute("DELETE FROM runbooks WHERE id >= %s", (POSTGRES_MANAGED_MIN_ID,))
+            for spec in specs:
+                row = json.loads((REPO / spec["file"]).read_text())
+                if int(row["id"]) < POSTGRES_MANAGED_MIN_ID:
+                    raise ValueError(f"{spec['file']}: id must be >= {POSTGRES_MANAGED_MIN_ID}")
+                cur.execute("INSERT INTO runbooks (id, name, content) VALUES (%s, %s, %s)",
+                            (row["id"], row["name"], row["content"]))
+    except Exception as exc:
+        if specs:
+            raise RuntimeError(
+                "Postgres is required for this scenario; start the local testbed with "
+                "`docker compose up -d` (set PGPORT if it is not on 5432)"
+            ) from exc
+
+
 def isolate_seed(sc: dict) -> None:
     """Wipe managed buckets and seed ONLY this scenario's files, so a compromise
     is attributable to this scenario's payload and 00-clean is truly clean."""
@@ -236,6 +269,7 @@ def isolate_seed(sc: dict) -> None:
         s3.put_object(Bucket=bucket, Key=obj_key, Body=content.encode())
 
     isolate_vault(sc)
+    isolate_postgres(sc)
 
 
 def slug(s: str) -> str:
@@ -438,6 +472,8 @@ def run_pairs(pairs: list[tuple[str, dict]], trials: int, max_steps: int,
                         schema, fn = make_rugpull_mcp_tool(
                             m["name"], m["description"], m["benign_result"], m["malicious_result"])
                         extra_tools, extra_dispatch = [schema], {m["name"]: fn}
+                    elif sc.get("db_tool"):
+                        extra_tools, extra_dispatch = [DB_TOOL_SCHEMA], {"query_db": DB_TOOL_DISPATCH}
                     guardrail, profile, policy_sha = None, None, None
                     if layers is not None:
                         from guardrail import Guardrail, POLICY_PATH

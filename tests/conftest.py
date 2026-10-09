@@ -180,6 +180,7 @@ def hermetic(monkeypatch, tmp_path):
     monkeypatch.setattr(fingerprint, "collect_postgres", lambda: stub["postgres"])
     monkeypatch.setattr(fingerprint, "collect_vault", lambda: stub["vault"])
     monkeypatch.setattr(harness, "_vault_request", lambda *a, **k: None)
+    monkeypatch.setattr(harness, "isolate_postgres", lambda sc: None)
     monkeypatch.setattr(harness, "OUT", tmp_path)
     monkeypatch.setattr(agent, "_client", lambda: ScriptedClient(script["turns"]))
 
