@@ -44,14 +44,19 @@ def test_shipped_config_settings():
     c = cfg()
     assert c["trials_per_cell"] == 30
     assert c["conditions"] == ["undefended", "full-guardrail"]
-    assert c["model"] == "TODO"                      # left for the PI to fill in
+    assert c["model"] == "meta-llama/llama-3.1-8b-instruct"   # the frozen pilot model
     assert c["check_fingerprint"] is True
     assert c["fingerprint_reference"] == "fingerprints/reference.json"
 
 
-def test_runner_refuses_while_model_is_todo():
+def test_shipped_config_loads_with_its_model_set():
+    loaded = harness.load_pilot_config(CONFIG, scenarios())
+    assert loaded["model"] == "meta-llama/llama-3.1-8b-instruct"
+
+
+def test_runner_refuses_while_model_is_todo(tmp_path):
     with pytest.raises(SystemExit) as e:
-        harness.load_pilot_config(CONFIG, scenarios())
+        harness.load_pilot_config(write_cfg(tmp_path, model="TODO"), scenarios())
     assert "TODO" in str(e.value)
 
 

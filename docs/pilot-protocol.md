@@ -11,7 +11,7 @@ vulnerable any model is. No attack-success rate is an outcome of this pilot, and
 
 | Item | Value | Source of truth |
 |---|---|---|
-| Model | one open-weight model, **TODO** (PI to set) | `pilot/pilot_config.yaml` → `model` |
+| Model | one open-weight model, `meta-llama/llama-3.1-8b-instruct` (OpenRouter id) | `pilot/pilot_config.yaml` → `model` |
 | Scenarios | 7 (table below) | `pilot/pilot_config.yaml` → `scenarios` |
 | Conditions | `undefended`, `full-guardrail` (L1+L2+L3, each scenario's own `task_profile`) | `conditions` |
 | Trials per cell | 30 (a cell = scenario × condition) | `trials_per_cell` |

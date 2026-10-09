@@ -11,9 +11,9 @@
 
 version: 1
 
-# TODO: set this to the single open-weight model for the pilot (an OpenRouter
-# model id). The runner exits with an error while this is TODO or empty.
-model: TODO
+# The single open-weight model for the pilot (an OpenRouter model id). The
+# runner exits with an error if this is TODO or empty.
+model: meta-llama/llama-3.1-8b-instruct
 
 trials_per_cell: 30          # a cell = one (scenario, condition) pair
 max_steps: 8                 # model turns per trial (the harness default)
