@@ -75,4 +75,4 @@ for the full matrix.
 
 ## License
 
-MIT
+Released under the MIT License — see [LICENSE](LICENSE).

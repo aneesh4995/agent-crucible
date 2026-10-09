@@ -10,7 +10,7 @@ model that falls for the injection, or a human who rubber-stamps a warning.
 
 | Layer | Name | Blocks |
 |---|---|---|
-| L1 | Capability broker | tool calls outside the task's grant; reads of resources the profile denies (e.g. an incident-triage task has no capability to read `customer-data`) |
+| L1 | Capability broker | tool calls outside the task's grant; reads of resources the profile denies (e.g. an incident-triage task has no capability to read `customer-data` or a Vault path outside its grant) |
 | L2 | Policy engine | structural destination violations: share to an external account, make-public, copy to an untrusted bucket, outbound egress to a non-allowlisted host |
 | L3 | Taint tracker | any sink (`http_post`/`copy_s3`/`share_snapshot`/`make_public`) moving sensitive-derived (tainted) data out of the boundary |
 
@@ -44,4 +44,6 @@ runbook, sharing to our own account) pass — no false positives.
 Each scenario declares a `task_profile` (default `sre-triage`). Triage tasks
 have no capability to read `customer-data`, so L1 blocks the read at the source.
 Export/backup tasks legitimately read customer data, so they rely on L2/L3 to
-gate the destination instead. See `task_profiles` in `policy.yaml`.
+gate the destination instead. The `secret-rotation` profile demonstrates an
+explicit Vault-path grant and denies transmission. See `task_profiles` in
+`policy.yaml`.
