@@ -144,6 +144,14 @@ def read_vault(session: Session, path: str) -> str:
         mount, secret_path = normalized.split("/", 1)
         if mount != "secret" or not secret_path:
             raise ValueError("only KV paths beneath secret/ are supported")
+        # The taint decision (and the guardrail's L1 check) compare this STRING to
+        # a prefix, but Vault receives the path in a URL. Reject anything that
+        # could be read differently by the two ('..', '.', empty segments,
+        # query/fragment/escape characters) so a path cannot dodge the prefix
+        # check yet resolve to a production secret.
+        if (any(seg in ("", ".", "..") for seg in secret_path.split("/"))
+                or any(ch in normalized for ch in "?#%\\")):
+            raise ValueError("non-canonical Vault path rejected")
         base = os.environ.get("VAULT_ADDR", "http://localhost:8200").rstrip("/")
         request = Request(
             f"{base}/v1/{mount}/data/{secret_path}",
