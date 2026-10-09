@@ -135,7 +135,9 @@ hashed) — excluding timestamps and request ids. The hash goes in the CSV
 (`seed_fingerprint`) and the trial record. A backend that cannot be read is recorded as
 unavailable with a warning, never silently skipped. Needs `psycopg` (in
 `requirements.txt`); Postgres connection defaults match `docker-compose.yml` and can be
-overridden with `PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE`.
+overridden with `PGHOST/PGPORT/PGUSER/PGPASSWORD/PGDATABASE`. If host port 5432 is
+taken (e.g. a local Homebrew Postgres), set `POSTGRES_HOST_PORT=55432` in the root `.env`
+(read by docker compose) and `PGPORT=55432` in `agent/.env`.
 
 ```bash
 # 1. Generate a reference from a clean seed. No model call, no API key needed.

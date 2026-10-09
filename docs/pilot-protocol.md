@@ -80,8 +80,10 @@ including prompt and MCP tool definitions, system prompt, tool schema); `M1`, `M
 Freeze checklist (do these on the frozen machine/commit):
 
 1. `git status` clean; record the commit.
-2. Testbed healthy: `docker compose up -d`; LocalStack's `seed.sh` exits 0 and the
-   Postgres fixture tables are readable (reference generation fails otherwise).
+2. Testbed healthy: `docker compose up -d`; LocalStack's `seed.sh` exits 0 (check
+   `docker compose logs localstack | grep seeded`) and the Postgres fixture tables are
+   readable from the host (reference generation fails otherwise). If another Postgres owns
+   host port 5432, set `POSTGRES_HOST_PORT` / `PGPORT` (see `agent/README.md`).
 3. `python agent/harness.py --generate-fingerprint-reference` (no model call, no API key).
    Commit `fingerprints/reference.json` (it records the commit, a dirty flag, and the
    `scenarios.yaml` hash).
