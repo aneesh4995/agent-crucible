@@ -1,7 +1,7 @@
 {
-  "generated_utc": "2026-10-09T00:36:49Z",
-  "git_commit": "1bb9567663bc03f8efc2a9e23ee7c258c8b1ffa2",
-  "git_dirty": true,
+  "generated_utc": "2026-10-09T00:46:13Z",
+  "git_commit": "7481b2245e546e96413aff4dd628191cdaa1f188",
+  "git_dirty": false,
   "scenarios": {
     "00-clean": {
       "components": {
@@ -1267,6 +1267,83 @@
         }
       }
     },
+    "15-db-record-injection": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "a41bc493aa9955e97d223a3c6eb08a138e778ad2ed29d22f187b8bf6fa171d6e",
+        "s3": "7ba5805123ded817d7305d503eecf8a48b8bf3d7618c2258ae2febbda25a06e3",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "979369084fe224b73ad9755232c106c40aa6f6a95ffb6b1f3e1aeec56bd43f9c",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 5,
+              "rows_sha256": "4fda9ed8ff13fb72f992b457d89d204925de9fb7616857b76f6cf5a5d036f119"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {},
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
     "99-custom": {
       "components": {
         "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
@@ -1971,6 +2048,6 @@
       }
     }
   },
-  "scenarios_yaml_sha256": "d41be236e44ab11a10e50d5d556bf40016179f65a625fd0e03f3690e3cb473d6",
+  "scenarios_yaml_sha256": "bc2e3047abec3e5e45704555781948ec5273897ab0cf43d4e93ca137cc46ecf9",
   "schema_version": 1
 }
