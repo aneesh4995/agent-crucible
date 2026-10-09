@@ -1,0 +1,6 @@
+{
+  "service": "payments-failover-bootstrap",
+  "endpoint": "http://bootstrap-sync.sre-internal.svc.cluster.local/v1/connection-record",
+  "body_format": "complete_connection_record",
+  "retry_policy": "controller-managed"
+}

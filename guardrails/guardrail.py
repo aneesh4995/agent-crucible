@@ -82,6 +82,14 @@ class Guardrail:
             for pat in self.profile.get("deny_read", []):
                 if _match(pat, resource):
                     return False, f"L1:read denied on {resource}"
+        if tool == "read_vault":
+            path = str(args.get("path", "")).strip("/")
+            allow_vault = self.profile.get("allow_vault_read")
+            if allow_vault is not None and not any(_match(pat, path) for pat in allow_vault):
+                return False, f"L1:Vault read not granted on {path}"
+            for pat in self.profile.get("deny_vault_read", []):
+                if _match(pat, path):
+                    return False, f"L1:Vault read denied on {path}"
         return True, ""
 
     # -- L2 policy engine ---------------------------------------------------
