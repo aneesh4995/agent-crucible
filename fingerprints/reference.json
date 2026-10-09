@@ -1,0 +1,1976 @@
+{
+  "generated_utc": "2026-10-09T00:23:19Z",
+  "git_commit": "c24422d0ad73c5318161a3e3ae0816cc73189871",
+  "git_dirty": true,
+  "scenarios": {
+    "00-clean": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "5b7a19e01169d0995910368756665a71643249607d96a5a9d90864aa312cd811",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "861d285910f829616f8ea0c070b7b5b3a085b247a00aa362d474e3bd3c2eeb83",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {},
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "on-call-runbook.md": "20e9286f346639e34767fb94590cd53e555056e9692cbc7ec4e7825907bba55c"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "01-blatant-override": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "e48e65f0b57f2b2e6909ac250a8f751b1720b2f616ca7561f6969077f9923049",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "51c00a009631160af12f294a197b9321370f6967bce0993c8942e323c6879566",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "maintenance/db-cpu-alert.md": "82bb4b6e48b743569b5e129df953317badefa752cf7a712f8ea31a47fca6f0e6"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "02-soc2-pretext": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "75ad87e3222956d18759867e32efc7465c73d1454f0baf753efcb6f85db5bafb",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "77f95b33b4bde11dafc2ffd40ebdb009653f4ac914ba1b9e8d56ab0e0d06c108",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "compliance/db-cpu-alert.md": "24a66b4e54297c57499a3af12e232b7da5e85fc012204c577088294b45971f5e"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "03-telemetry-push": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "9f1e6704c51f27e4a199bb7c599f500bf4f7131a043cf83ac097b9440b4b07e2",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "85449fe3be12c320150bfe45c813d7b19a90d776d75dedbc3017be883fdcd820",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "observability/db-cpu-alert.md": "1d1d8e15cd41b159ec8cf8742bdfe57f2dfad01cd42941195a324ba8e8d7ec31"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "04-env-indirection": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "704c0ff5b93efa47d10ada8dbe4b869843869855ca3294d595b638ba85990b45",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "103f2920c7ee5c0b2045e4433f2bdc392b59c95e9f1324e7c055170ac1dee03e",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "runbooks/db-cpu-sev2.md": "bde0d32f6807fa58f7eb616b09678839442755cb5566a4b383a251a660fdf17f"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "05-redactor-decoy": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "2ff5df1b9e98e796e54879883ef20cf5ed2c076e3c0855a2b849a59ae5739d54",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "dade76347cc94a0598076307c816ec862b0ae21e65ba7d53b46ebc32a980aa23",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "compliance/db-cpu-sev2.md": "3cf1c53f935c3c4a8d0c6c735c95418a06e77cc5360a801263ec707ba0245b0b"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "06-split-stage": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "0e1a8f935748da65bc8122a4522810e5db0febc257ae1829189c397d68b7e229",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "a7c92a255513645be779011c6c5cd3797e97512d01b7b650e4b3837f7531aaaa",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "hooks/pre-remediation.sh": "52f6a67210e030b41256f4af21848c8768e1ceb8996aed4660caaed79c02d674",
+              "runbooks/db-cpu-alert-v3.md": "5b0f2a005d2f316fdafa8178c953cf9843fb7c5f4324b3f24076d978c45f7f80"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "07-confused-deputy-export": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "96c60743273e1eb01a6884a75ff24d7b067c2462949feecfc442857788a86b4a",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "bdb78557adcb1c92fd1e7ea60c55e251bd6dd916e9441004769afa3122f681d2",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "exports/customers_2026q3.csv": "642438381cef0e2b59c2e637feeb0073c5bb716a727f29c0328a75237058114c"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "config/export-target.txt": "fae90393435906d6247c78b55e575ca2d899c2da2347b4d3abbbb144fed58a65",
+              "exports/quarterly-export-runbook.md": "20516bd4f469a974caa9636c56d24b8cfb7029e95b453d11cd83cadd5abb9ee5"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "08-composition-exfil": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "42a8adcca6f7a1d2776aecc749ef028594b338b282af8b73903c09a8c527110a",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "8689add89b8bc1f145afb032818e013f8f9da9406e52f88858c8aae50389c364",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "backup/snapshot-runbook.md": "5c4611414483cdcbe325a09f154dc7aa97f6ececf07180b2e302177a34f0ed75",
+              "config/share-config.txt": "3cedbcc9d106e92d96fa46e39c0f0dd7422a1cc433805b611b9c4b4165ffd2de"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "08b-airtight": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "d7fa20e7a715bf2fe08b396ee4139f1023b570d88728612e0b36d2012857901e",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "e3811a388b9a6c45a8f3bbf78c431173bc2015715fd7a1ae4f3fb848b78722ba",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "exports/customers_2026q3.csv": "642438381cef0e2b59c2e637feeb0073c5bb716a727f29c0328a75237058114c"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "backup/snapshot-runbook-airtight.md": "fe23b420249e537871c51979b1a6b0d059106c2bafde42f20159a2c27cbfba4e",
+              "config/share-config.txt": "3cedbcc9d106e92d96fa46e39c0f0dd7422a1cc433805b611b9c4b4165ffd2de"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "09-destructive-remediation": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "ac5561e5fc362cd85da201dc66d9d3c7317f286e24a192a7c50bd9a4d7fd3a7a",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "1d468340c08f0f5710b0201ff55017fdac3e3084a3d5900a8d37ef2d7d5e6ae1",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "incidents/disk-pressure-runbook.md": "3cfea34e52e49b690f517dfa78339096eeef9acf5b8f3831bf7d7355271d96ef"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "10-trusted-channel": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "e0e2978cc7bcd219a697f040dbf06965cbdc998985105ba62efb9598a2e080e0",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "6899fc79a1ccc002e583d5b836831cc013e40707695f7fe027835a5d6156878d",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {
+              "INC-2087.json": "3f8ae753a7d702b9f2edba0714a747e440454a87a98760500fdae512c7452aad"
+            },
+            "sre-logs": {},
+            "sre-runbooks": {},
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "11-vault-attestation": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "ad385698efd043936e1cb847ad762f15b676132c82eacc482fb2130ee4e4e210",
+        "vault": "9c9af133324855a10f28ded0c035db2ff3993f59ae32323d0208d9980bfd1bbb"
+      },
+      "fingerprint": "152b9578b4a89852d90d9da5b85439343b8f9192fe09156652fc02a7516106a0",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {},
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "identity/credential-attestation-runbook.md": "422387a5b81f74cb3cdb8b8e67892a0d01aa3c0f8a1c2eb7fad8427514c84963"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/production/aws": "79416ee804b4e8b9b17790f607639b2f1b48b110b8c0d24ffd846dba670c834e",
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "12-vault-config-deputy": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "d7e73f6f95f7a268064b1f2658aded0e4f63a24b179e9346f16b33855f4fc1d0",
+        "vault": "d59b3521df31d1614f06ce9564c1100be9e6533b451ad9ed1c1f615e351b5588"
+      },
+      "fingerprint": "7eb638f5fb15b9bf1a56144e77a9f9c68133f9be7f27e7dee96750a88de10207",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {},
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "config/db-bootstrap-target.json": "24261702a67d4a2a335e010d758126888fd8e44e81e08058d6d7e554dd42ca12",
+              "database/failover-bootstrap-runbook.md": "4e0603c67d5155e53b0774e09d9cb42d902333b2b73e77c237ed082fd9e2061b"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/production/db": "cf3f03ebf4fe2857cb32aad0550a315697bf57877e7fde54033bab76ddf7747c",
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "13-metadata-laundering": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "f9596464b48c11ab5532eb81718d226eea4ba783506b1fe9a98e8f10b7c66a0b",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "2a2adf6e6cf81545fe0b72143683599b3b3910ec525b71820bb29fafd8526d58",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Vendor_Payment_Details.csv": "659ff369c481994f0cf954a369f9878ba7c6a5c87ee196c2c246a86b34599f85"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "incidents/p1-evidence-runbook.md": "a01885930af43e5490b22ebcaf6e15d5ffc7b80c5eac14223cd0972fd03688ee",
+              "manifests/INC-2214-evidence.json": "b3d6f0b0c932e56032d98266ed36c79d59253dd0966079cc9f8d0a3724ac797b"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "14-mcp-authorization-chain": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "2ef68708c15ad0f20e98db422ef84e9f04bc9accec479b86563d991fe47214cd",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "a8d112b30ff1a3719745c5739044ff0ff59b6b509eb2b49777f62356b397f303",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Employee_Payroll.csv": "9b195621fd7402b2249531ff6cb3c5143b16eaeeece1e2c8783d01a5d0bf583f"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {},
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "99-custom": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "da30994e99882b89f00a852d0967a887af080f0f9500052d8b5ac5dabf5fa368",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "463023341fe83b30b4e5d97f4e0c215ff858b80f029e6235a96a5cab2c64a86c",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "incidents/payments-runbook.md": "325285f32a7a2d04037c84637f99444244e1affb419aa4440b564bd03d65df71"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "B1-log-cleanup": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "fb8a134ab3ba282f24d78b499314222ccd83f9ba06eb36e2ed496f2348dea43d",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "65a875154cb5bd506aeaea063598d678b841e3e8258ac862215ef7b4b8a603cd",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {},
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {
+              "2026-06-30-app.log": "77565c122f6bf797c20138dcd630629dc530af42784855ad94551a3d22fdb078"
+            },
+            "sre-runbooks": {
+              "incidents/log-cleanup-runbook.md": "4af4a97e8844a212212f0bce560030d4dbbb3d8fa35e1cd19603ae08dfa71349"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "B2-internal-export": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "90228cc6139665046c002fe45f254ad07948c0ddad062ce96764fd1ff82ae94f",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "42c3e86d19bf81fe0ce7e38803e4998b06a451022c7d7a89bcfd2a815018a7dc",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "exports/customers_2026q3.csv": "642438381cef0e2b59c2e637feeb0073c5bb716a727f29c0328a75237058114c"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "exports/internal-export-runbook.md": "07f19055e556adc118649d4a79fcc26d527344f076ac71e6f73b0ed3ae6ac37d"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "HO-A-audit-public-read": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "fd5c559292024946968fdb4e824e7f0527edd4b255868aca05d8a5b2461f40b6",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "b0395e028ae5107cacb3dfde43c6c2bb04ad021f6044116ffbfd504fd4230f6c",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Employee_Payroll.csv": "9b195621fd7402b2249531ff6cb3c5143b16eaeeece1e2c8783d01a5d0bf583f"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "audit/payroll-audit-runbook.md": "2d784b193e576dcaa21a7df6f7ead8dd66ed82f8298627584ba1e5f7cca13a78"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "HO-B-bi-scratch-copy": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "9383aee3b677ca6098b3ba878eb94e2b8335aaea5cc8e72ea5dda5488e8ef8a2",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "e97dd3d4ae9fbf6e41a500ffb68c9e993c9df4d55726e6410a6e9b45073c3990",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Vendor_Payment_Details.csv": "659ff369c481994f0cf954a369f9878ba7c6a5c87ee196c2c246a86b34599f85"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "exports/bi-refresh-runbook.md": "8b3b720027feb284ade506955bd26c75da5c545262927b9af957433481ce9037"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "HO-C-pci-minimization": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "ab0419dbc5b1ebd1b054a8e2efed69f4e60fe2bb6282c80c302096d51b9f6a1f",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "e66838766fd5e2e70fd9f87946730fb2a483c7fd4dd73fcfbb14511a8c730dac",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {},
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {
+              "compliance/pci-minimization-runbook.md": "cc4101f24ac3cc21b3b90a97c012a788ce73cb8f1ae307d88ea1c94fe392d1b3"
+            },
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "M1-mcp-desc-poison": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "7ba5805123ded817d7305d503eecf8a48b8bf3d7618c2258ae2febbda25a06e3",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "99badfe25b222cee432750458a6924cb5fc44d7f79983a8090cde3577346dad3",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {},
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "M2-mcp-result-poison": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "7ba5805123ded817d7305d503eecf8a48b8bf3d7618c2258ae2febbda25a06e3",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "99badfe25b222cee432750458a6924cb5fc44d7f79983a8090cde3577346dad3",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {},
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    },
+    "M3-mcp-rugpull": {
+      "components": {
+        "dynamodb": "07e89c76698bf2daaa574fdb318a5abb87b8a97cb31d7bc5a9a273e79c2e672b",
+        "postgres": "d55f8a9df0c55cff8e02820fdabc5fa237cafa72a245d4c31b1d0f2c694aa47a",
+        "s3": "7ba5805123ded817d7305d503eecf8a48b8bf3d7618c2258ae2febbda25a06e3",
+        "vault": "9ccd5b7a8eb002180157bbca66758c485a93c59aefdc79fa0a7b8b674dcf333a"
+      },
+      "fingerprint": "99badfe25b222cee432750458a6924cb5fc44d7f79983a8090cde3577346dad3",
+      "state": {
+        "dynamodb": {
+          "tables": {
+            "incidents": {
+              "item_count": 1,
+              "items_sha256": "1c2170412383db771429247a3fb6c964b2b52a585a3087c8accdb3a882691dea",
+              "key_schema": [
+                [
+                  "id",
+                  "HASH"
+                ]
+              ]
+            }
+          }
+        },
+        "postgres": {
+          "tables": {
+            "audit_log": {
+              "columns": [
+                "id",
+                "actor",
+                "action"
+              ],
+              "row_count": 2,
+              "rows_sha256": "aa76a4cbee8f01009e2dd47856059f97a48fd692b2fb3753513c3bf887875f5e"
+            },
+            "incidents": {
+              "columns": [
+                "id",
+                "title",
+                "severity",
+                "status",
+                "runbook_id"
+              ],
+              "row_count": 3,
+              "rows_sha256": "581e571d6d215c0bc4a969b626bf8c36cc2035e9a8630291a7757a9c9c31ef30"
+            },
+            "runbooks": {
+              "columns": [
+                "id",
+                "name",
+                "content"
+              ],
+              "row_count": 4,
+              "rows_sha256": "3b4567481289a7a95a33a9d46c2b7a0884456c255d45a99ee4b2b20a625d54d5"
+            }
+          }
+        },
+        "s3": {
+          "buckets": {
+            "analytics-scratch": {},
+            "customer-data": {
+              "Customer_PII.csv": "bb034b376de20b812cf6f0181372d6e2c91d08f8d2617306d68f58960802dc77"
+            },
+            "data-warehouse": {},
+            "db-snapshots": {},
+            "incident-store": {},
+            "sre-logs": {},
+            "sre-runbooks": {},
+            "vendor-analytics-export": {}
+          }
+        },
+        "vault": {
+          "secrets": {
+            "secret/staging/db": "0014815bef4cb3414fb4f29407677397409ed7a37d098e15b0894b4df31d49e5"
+          }
+        }
+      }
+    }
+  },
+  "scenarios_yaml_sha256": "d41be236e44ab11a10e50d5d556bf40016179f65a625fd0e03f3690e3cb473d6",
+  "schema_version": 1
+}
